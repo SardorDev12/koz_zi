@@ -1,26 +1,28 @@
-const fs = require("fs");
-const path = require("path");
-const { getTodayFile } = require("./getTodayFile");
+const fs = require('fs');
+const path = require('path');
+const { getTodayFile } = require('./getTodayFile');
 
 const daily = () => {
   const todayFile = getTodayFile();
 
   if (!fs.existsSync(todayFile)) {
-    return "No reading progress for today.";
+    return 'No reading progress for today.';
   }
 
-  const messages = JSON.parse(fs.readFileSync(todayFile, "utf8"));
+  const messages = JSON.parse(fs.readFileSync(todayFile, 'utf8'));
 
   const stats = {};
   let totalPages = 0;
 
   for (const msg of messages) {
-    const match = msg.text.match(/Book:\s*(.*?)\s*Pages:\s*(\d+)/i);
+    const text = msg.text.trim();
+    const bookMatch = text.match(/Kitob\s*:\s*([^\n]+)/i);
+    const pagesMatch = text.match(/Mutolaa\s*:\s*(\d+)/i);
 
-    if (!match) continue;
+    if (!bookMatch || !pagesMatch) continue;
 
-    const book = match[1];
-    const pages = parseInt(match[2]);
+    const book = bookMatch[1].trim();
+    const pages = parseInt(pagesMatch[1]);
     const user = msg.userName;
 
     if (!stats[user]) {
@@ -41,10 +43,10 @@ const daily = () => {
   }
 
   const leaderboard = Object.entries(stats).sort(
-    (a, b) => b[1].totalPages - a[1].totalPages,
+    (a, b) => b[1].totalPages - a[1].totalPages
   );
 
-  let result = "📚 Daily Reading Leaderboard\n\n";
+  let result = '📚 Daily Reading Leaderboard\n\n';
 
   leaderboard.forEach(([user, data], i) => {
     result += `${i + 1}. ${user} — ${data.totalPages} pages\n`;
@@ -52,13 +54,12 @@ const daily = () => {
 
   result += `\nTotal pages today: ${totalPages}`;
 
-  const statsDir = "stats";
+  const statsDir = 'stats';
   fs.mkdirSync(statsDir, { recursive: true });
 
   const statsFile = path.join(statsDir, path.basename(todayFile));
 
   fs.writeFileSync(statsFile, JSON.stringify(stats, null, 2));
-
   return result;
 };
 
