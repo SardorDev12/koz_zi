@@ -46,13 +46,13 @@ const daily = () => {
     (a, b) => b[1].totalPages - a[1].totalPages
   );
 
-  let result = '📚 Daily Reading Leaderboard\n\n';
+  let result = '📚 Kunlik mutolaa yetakchilari:\n\n';
 
   leaderboard.forEach(([user, data], i) => {
-    result += `${i + 1}. ${user} — ${data.totalPages} pages\n`;
+    result += `${i + 1}. ${user} — ${data.totalPages} sahifa\n`;
   });
 
-  result += `\nTotal pages today: ${totalPages}`;
+  result += `\nJami umumiy mutolaa: ${totalPages}`;
 
   const statsDir = 'stats';
   fs.mkdirSync(statsDir, { recursive: true });
