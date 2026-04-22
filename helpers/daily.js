@@ -6,7 +6,7 @@ const daily = () => {
   const todayFile = getTodayFile();
 
   if (!fs.existsSync(todayFile)) {
-    return 'No reading progress for today.';
+    return 'Bugun hech kim mutolaa qilmadi yoki guruhga yozmadi 😔.';
   }
 
   const messages = JSON.parse(fs.readFileSync(todayFile, 'utf8'));
