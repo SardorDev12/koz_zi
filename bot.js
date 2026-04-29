@@ -63,6 +63,13 @@ http
         return;
       }
 
+      if(req.url === "/remind"){
+        await bot.sendMessage(GROUP_ID, "Bugun mutolaa qildingizmi?")
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.end();
+        return;
+      }
+
       res.writeHead(200, { 'Content-Type': 'text/plain' });
       res.end('Bot is running\n');
     } catch (err) {
